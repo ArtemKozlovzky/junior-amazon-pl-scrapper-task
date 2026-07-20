@@ -1,0 +1,14 @@
+SQLAlchemy==2.0.51
+fastapi==0.139.0
+bs4==0.0.2
+beautifulsoup4==4.15.0
+dotenv==0.9.9
+python-dotenv==1.2.2
+pydantic==2.13.4
+curl_cffi==0.15.0
+pytest==9.1.1
+alembic==1.18.5
+uvicorn==0.51.0
+lxml==6.1.1
+asyncpg==0.31.0
+psycopg2-binary==2.9.12

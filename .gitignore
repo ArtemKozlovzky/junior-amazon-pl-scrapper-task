@@ -1,0 +1,8 @@
+/.env
+/app/sources/amazon_pl/__init__.py
+/app/sources/__init__.py
+/app/__init__.py
+/tests/fixtures/__init__.py
+/tests/__init__.py
+**/__pycache__/
+*.py[cod]
