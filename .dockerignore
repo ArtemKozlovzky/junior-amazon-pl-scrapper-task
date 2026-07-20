@@ -5,3 +5,6 @@
 .env
 .gitignore
 check_tls_peet.py
+functional_test.py
+links.txt
+output

@@ -10,7 +10,7 @@ from app.db import init_models
 from app.fetcher import Fetcher
 from app.proxy import ProxyPool
 from app.config import logger, SOURCES
-from app.routes import amazon_pl
+from app.routes import endpoints
 
 
 def _load_proxies_from_env() -> list[str]:
@@ -34,7 +34,7 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(title="Marketplace Scraper", lifespan=lifespan)
 
-app.include_router(amazon_pl.router)
+app.include_router(endpoints.router)
 
 
 @app.get("/health")
