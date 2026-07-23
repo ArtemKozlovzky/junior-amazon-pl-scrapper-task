@@ -65,6 +65,7 @@ _http://localhost:8000_
 
 PostgreSQL starts automatically.
 
+
 ## API 
 
 Open Swagger UI:
@@ -88,3 +89,14 @@ for /products/{external_id} enter:
 - external_id: id of product from site
 - force_refresh: if True parses card no matter how fresh it is
 and does not take data from db
+
+
+### Relevant environment variables
+
+- `COOKIES_ENABLED` (default true) — inject cookies on the fetch path
+- `COOKIE_TARGET_POOL_SIZE` (default 5) — active sets to keep per source
+- `COOKIE_TTL_HOURS` (default 6) — safety TTL for a minted set
+- `WARMER_ENABLED` (default true) — master switch for the warmer process
+- `WARMER_REFRESH_INTERVAL` (default 60) — top-up interval in seconds
+- `WARMER_REFRESH_MARGIN_MIN` (default 30) — sets with less life left are refreshed
+- `WARMER_HEADLESS` (default true) — run Chromium headless

@@ -32,6 +32,22 @@ product_freshness_hrs = os.getenv("PRODUCT_FRESHNESS_HOURS", "24")
 
 FRESHNESS_MAX_AGE = timedelta(hours=float(product_freshness_hrs))
 
+
+def _env_bool(name: str, default: bool) -> bool:
+    return os.getenv(name, str(default)).strip().lower() in ("1", "true", "yes", "on")
+
+COOKIE_TARGET_POOL_SIZE = int(os.getenv("COOKIE_TARGET_POOL_SIZE", "5"))
+COOKIE_TTL = timedelta(hours=float(os.getenv("COOKIE_TTL_HOURS", "6")))
+WARMER_REFRESH_INTERVAL = float(os.getenv("WARMER_REFRESH_INTERVAL", "60"))
+WARMER_REFRESH_MARGIN = timedelta(minutes=float(os.getenv("WARMER_REFRESH_MARGIN_MIN", "30")))
+WARMER_HEADLESS = _env_bool("WARMER_HEADLESS", True)
+WARMER_ENABLED = _env_bool("WARMER_ENABLED", True)
+COOKIES_ENABLED = _env_bool("COOKIES_ENABLED", True)
+
 SOURCES: dict[str, SourceParser] = {
     "amazon_pl": AmazonPLParser(),
 }
+
+def _load_proxies_from_env() -> list[str]:
+    raw = os.getenv("PROXY_LIST", "")
+    return [p.strip() for p in raw.split(",") if p.strip()]

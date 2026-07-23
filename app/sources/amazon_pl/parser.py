@@ -120,7 +120,7 @@ class AmazonPLParser(SourceParser):
                 except json.JSONDecodeError:
                     images = []
 
-        if not images: # fallback
+        if not images:
             for img in soup.select("#altImages img"):
                 src = img.get("src")
                 if src:

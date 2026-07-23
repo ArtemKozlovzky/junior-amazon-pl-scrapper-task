@@ -32,5 +32,22 @@ services:
       postgres:
         condition: service_healthy
 
+  warmer:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      DATABASE_HOST: postgres
+      DATABASE_PORT: 5432
+    command: ["python", "-m", "app.warmer"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+      api:
+        condition: service_started
+
 volumes:
   pgdata:

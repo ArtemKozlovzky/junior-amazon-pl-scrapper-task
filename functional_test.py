@@ -4,6 +4,8 @@ import argparse
 from pathlib import Path
 
 from app.fetcher import Fetcher, FetchError
+from app.config import _load_proxies_from_env
+from app.proxy import ProxyPool
 
 URLS_FILE = "links.txt"
 OUTPUT_DIR = Path("output")
@@ -27,8 +29,11 @@ async def main():
 
     urls = urls[:args.limit]
 
+    proxies = _load_proxies_from_env()
+    proxy_pool = ProxyPool(proxies)
+
     semaphore = asyncio.Semaphore(args.concurrency)
-    fetcher = Fetcher()
+    fetcher = Fetcher(proxy_pool=proxy_pool)
 
     tasks = [
         asyncio.create_task(get_data(i, url, fetcher, semaphore))

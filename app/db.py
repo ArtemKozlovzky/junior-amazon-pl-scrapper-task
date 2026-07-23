@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_asyn
 from datetime import datetime
 from decimal import Decimal
 
-from sqlalchemy import Boolean, DateTime, Float, Integer, JSON, Numeric, String, Text, func
+from sqlalchemy import Boolean, DateTime, Float, Index, Integer, JSON, Numeric, String, Text, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
 from app.config import database_url
@@ -73,6 +73,33 @@ class ListingQueryRecord(Base):
     page: Mapped[int] = mapped_column(Integer, primary_key=True)
     external_ids: Mapped[list] = mapped_column(JSON)
     scraped_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class CookieSetRecord(Base):
+    __tablename__ = "cookie_sets"
+
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    source: Mapped[str] = mapped_column(String(50), index=True)
+
+    cookies: Mapped[list] = mapped_column(JSON)
+
+    status: Mapped[str] = mapped_column(String(16), default="active", index=True)
+
+    minting_proxy: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    user_agent: Mapped[str | None] = mapped_column(String(512), nullable=True)
+    impersonate_profile: Mapped[str | None] = mapped_column(String(50), nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True, index=True)
+    last_used_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    success_count: Mapped[int] = mapped_column(Integer, default=0)
+    failure_count: Mapped[int] = mapped_column(Integer, default=0)
+    consecutive_failures: Mapped[int] = mapped_column(Integer, default=0)
+
+    __table_args__ = (
+        Index("ix_cookie_sets_source_status_expires", "source", "status", "expires_at"),
+    )
 
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
