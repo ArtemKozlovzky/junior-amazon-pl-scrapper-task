@@ -2,6 +2,15 @@
 
 The application scrapes product information from amazon.pl, stores normalized data in PostgreSQL and exposes it through a REST API.
 
+## Achievements 
+
+- Built an async product-scraping API (FastAPI, async SQLAlchemy 2.0, PostgreSQL, curl_cffi) that scrapes amazon.pl, normalizes data via Pydantic, and serves it over REST with freshness-based caching.
+- Designed an anti-bot bypass layer using curl_cffi TLS/JA3 browser impersonation, a health-scored proxy pool with exponential cooldown, and captcha/block detection with retry + backoff.
+- Engineered a browser-driven cookie-warming pipeline (patchright/Playwright + APScheduler) running as an isolated worker that mints session cookies unavailable to JS-less HTTP clients and shares them with the fetcher through a Postgres-backed pool.
+- Implemented a full cookie lifecycle (active → used → expired → burned) with health/LRU-weighted selection and SELECT … FOR UPDATE SKIP LOCKED for safe concurrent access across processes.
+- Improved request success rate by aligning cookie provenance with proxy exit IP and switching to sticky proxy sessions, cutting captcha/block responses on protected endpoints.
+- Managed schema evolution with Alembic and containerized the API + warmer as separate services via Docker Compose.
+- Implemented a self-balancing proxy rotation pool with Bayesian-smoothed success scoring and weighted-random selection, so healthier proxies are favored while failing ones are temporarily benched via exponential cooldown — keeping throughput up without manual proxy management.
 
 ## Tech Stack
 
@@ -14,6 +23,7 @@ The application scrapes product information from amazon.pl, stores normalized da
 - BeautifulSoup4
 - Docker Compose
 - Pydantic
+- asyncio
 
 
 ## Project Structure
