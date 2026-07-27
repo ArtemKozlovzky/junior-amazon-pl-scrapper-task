@@ -40,7 +40,7 @@ async def _fetch(
     source: str,
 ) -> FetchResult:
     try:
-        result = await fetcher.get(url)
+        result = await fetcher.get(url, source=source)
     except CaptchaDetected as exc:
         await _log_fetch_failure(session, source, url, exc, was_blocked=True)
         raise HTTPException(status_code=502, detail=f"Source returned CAPTCHA: {exc}")
